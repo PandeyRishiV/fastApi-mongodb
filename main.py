@@ -1,3 +1,5 @@
+from enum import Enum
+from typing import List, Optional
 from fastapi import FastAPI
 from pydantic import BaseModel
 import pymongo
@@ -7,5 +9,5 @@ mongoClient = pymongo.MongoClient("mongodb+srv://pandeyrishiv_db_user:HRishiPand
 mongoDb = mongoClient["admin"]
 
 @app.get("/")
-def read_root():
-    return {"Hello" : "World"}
+async def read_root():
+    return {"Hello" : mongoClient.list_database_names()}
