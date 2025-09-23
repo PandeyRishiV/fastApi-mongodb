@@ -1,6 +1,8 @@
+from uuid import uuid4
 from pydantic import BaseModel
 from motor.motor_asyncio import AsyncIOMotorCollection
-
+from bson import ObjectId
+from pymongo import ReturnDocument
 
 class ListSummary(BaseModel):
     id: str
@@ -40,3 +42,7 @@ class ToDoList(BaseModel):
             name=doc["name"],
             items=[ToDoListItem.from_doc(item) for item in doc["items"]]
         )
+
+class ToDoDAL:
+    def __init__(self, todo_collection: AsyncIOMotorCollection):
+        self._todo_collection = todo_collection
