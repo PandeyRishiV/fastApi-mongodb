@@ -112,3 +112,15 @@ class ToDoDAL:
 
         if(response): return ToDoList.from_doc(response)
 
+    async def delete_item(self, id: str | ObjectId, item_id: str | ObjectId, session=None) -> ToDoList | None:
+        response = await self._todo_collection.find_one_and_update(
+            {"_id":ObjectId(id), "item.id": ObjectId(item_id)},
+            {
+                "$pull":{
+                    "items": {"id": item_id}
+                }
+            },
+            session=session,
+            return_document=ReturnDocument.AFTER
+        )
+        if response: return ToDoList.from_doc(response)
