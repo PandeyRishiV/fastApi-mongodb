@@ -73,3 +73,10 @@ class ToDoDAL:
         )
         return ToDoList.from_doc(doc)
         
+    async def delete_todo_list(self, id: str | ObjectId, session=None) -> bool:
+        response = await self._todo_collection.delete_one(
+            {"_id": ObjectId(id)},
+            session=session
+        )
+        return response.deleted_count == 1
+    
