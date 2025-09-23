@@ -46,3 +46,15 @@ class ToDoList(BaseModel):
 class ToDoDAL:
     def __init__(self, todo_collection: AsyncIOMotorCollection):
         self._todo_collection = todo_collection
+
+    async def list_todo_lists(self, session=None):
+        async for doc in self._todo_collection.find(
+            {},
+            projection={
+                "name":1,
+                "item_count":{"$size":"$items"},
+            },
+            sort={"name":1},
+            session=session,
+        ):
+            yield ListSummary.from_doc(doc)
