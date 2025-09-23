@@ -27,3 +27,16 @@ class ToDoListItem(BaseModel):
             label=item["label"],
             checked=bool(item["checked"])
         )
+
+class ToDoList(BaseModel):
+    id=str
+    name=str
+    items=list[ToDoListItem]
+
+    @staticmethod
+    def from_doc(doc) -> "ToDoList":
+        return ToDoList(
+            id=str(doc["_id"]),
+            name=doc["name"],
+            items=[ToDoListItem.from_doc(item) for item in doc["items"]]
+        )
