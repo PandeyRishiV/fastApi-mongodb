@@ -98,3 +98,17 @@ class ToDoDAL:
 
         if response: return ToDoList.from_doc(response)
     
+    async def set_checked_state(self, id: str | ObjectId, item_id: str | ObjectId, checked: bool, session=None) -> ToDoList | None:
+        response = await self._todo_collection.find_one_and_update(
+            {"_id": ObjectId(id), "item.id": ObjectId(item_id)},
+            {
+                "$set": {
+                    "$items.$.checked": checked
+                },
+            },
+            session=session,
+            return_document=ReturnDocument.AFTER
+        )
+
+        if(response): return ToDoList.from_doc(response)
+
