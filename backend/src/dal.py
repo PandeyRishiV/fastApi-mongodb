@@ -58,3 +58,10 @@ class ToDoDAL:
             session=session,
         ):
             yield ListSummary.from_doc(doc)
+
+    async def create_todo_list(self, name: str, session=None) -> str:
+        response = await self._todo_collection.insert_one(
+            {"name": name, "items":[]},
+            session=session
+        )
+        return str(response.inserted_id)
