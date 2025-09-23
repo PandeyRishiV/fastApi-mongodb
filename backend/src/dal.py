@@ -14,3 +14,16 @@ class ListSummary(BaseModel):
             name=str(doc["name"]),
             item_count=str(doc["item_count"])
         )
+
+class ToDoListItem(BaseModel):
+    id: str
+    label: str
+    checked: bool
+
+    @staticmethod
+    def from_doc(item) -> "ToDoListItem":
+        return ToDoListItem(
+            id=item["id"],
+            label=item["label"],
+            checked=bool(item["checked"])
+        )
