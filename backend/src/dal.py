@@ -65,3 +65,11 @@ class ToDoDAL:
             session=session
         )
         return str(response.inserted_id)
+    
+    async def get_todo_list(self, id: str | ObjectId, session=None) -> ToDoList:
+        doc = await self._todo_collection.find_one(
+            {"_id": ObjectId(id)},
+            session=session,
+        )
+        return ToDoList.from_doc(doc)
+        
