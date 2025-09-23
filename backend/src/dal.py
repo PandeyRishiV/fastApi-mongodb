@@ -80,3 +80,21 @@ class ToDoDAL:
         )
         return response.deleted_count == 1
     
+    async def create_item(self, id: str | ObjectId, label: str, session=None) -> ToDoList | None:
+        response = await self._todo_collection.find_one_and_update(
+            {"_id":ObjectId(id)},
+            {
+                "$push":{
+                    "items": {
+                        "id": uuid4().hex,
+                        "label": label,
+                        "checked": False,
+                    }
+                }
+            },
+            session=session,
+            return_document=ReturnDocument.After
+        )
+
+        if response: return ToDoList.from_doc(response)
+    
